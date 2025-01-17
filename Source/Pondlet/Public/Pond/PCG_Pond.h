@@ -23,17 +23,27 @@ public :
 protected : 
 	void PCGDataHandler(FPCGTaggedData Data) override;
 
-	UFUNCTION(CallInEditor)
+	UFUNCTION(CallInEditor,Category="Spline Reset")
 	void MakeCircleSpline();
 
-	UFUNCTION(CallInEditor)
+	UFUNCTION(CallInEditor,BlueprintCallable,Category = "Spline Reset")
+	void MakeEllipsisSpline();
+
+	UFUNCTION(CallInEditor, BlueprintCallable, Category = "Spline Reset")
+	void MakeLineSpline();
+
+	UFUNCTION(CallInEditor, Category = "PCG")
 	void EditorRegeneration();
 
 private : 
 
 	void UpdateSphereRadius();
 
-	void UpdateSplinePointsFromPCG(FPCGTaggedData Data);
+	void UpdateSplinePointsUsingPCGData(FPCGTaggedData Data);
+
+	void DigUsingPCGData(FPCGTaggedData Data);
+
+	void MakeBordersUsingPCGData(FPCGTaggedData Data);
 
 protected :
 	UPROPERTY(EditAnywhere)
@@ -44,6 +54,9 @@ protected :
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (ExposeOnSpawn = "true"))
 	int PondLength;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (ExposeOnSpawn = "true"))
+	int PondWidth;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (ExposeOnSpawn = "true"))
 	int SplineNumberOfPoints;

@@ -19,6 +19,8 @@ APCG_Pond::APCG_Pond()
 void APCG_Pond::OnConstruction(const FTransform& Transform)
 {
 	Super::OnConstruction(Transform);
+	PondSpline->SetRelativeLocation(FVector::ZeroVector);
+
 	/*PondSpline->ClearSplinePoints();
 	MakeCircleSpline();
 	UpdateSphereRadius();*/
@@ -28,7 +30,13 @@ void APCG_Pond::PCGDataHandler(FPCGTaggedData Data)
 {
 	Super::PCGDataHandler(Data);
 	if (Data.Pin == "SplinePoints") {
-		UpdateSplinePointsFromPCG(Data);
+		UpdateSplinePointsUsingPCGData(Data);
+	}
+	if (Data.Pin == "PondDigging") {
+		DigUsingPCGData(Data);
+	}
+	if (Data.Pin == "PondOutline") {
+		MakeBordersUsingPCGData(Data);
 	}
 }
 
@@ -40,6 +48,42 @@ void APCG_Pond::MakeCircleSpline()
 		float AngleDeg = PI * 2 * ((float)i / SplinePoints);
 		float X = PondLength * FMath::Cos(AngleDeg);
 		float Y = PondLength * FMath::Sin(AngleDeg);
+		PondSpline->AddSplinePoint(FVector(X, Y, 0), ESplineCoordinateSpace::Local);
+	}
+}
+
+void APCG_Pond::MakeLineSpline()
+{
+	PondSpline->ClearSplinePoints();
+	int SplinePoints = PondLength / 100;
+	if (SplinePoints % 2 != 0) {
+		SplinePoints++;
+	}
+	float StartX = -PondLength / 2;
+	float XOffset = PondLength / (SplinePoints / 2);
+	float YOffset = PondWidth / (SplinePoints / 2);
+	for (int i = 0; i < SplinePoints; i++) {
+		
+		int YSign = (i % 2 == 0) ? 1 : -1;
+		float X = i * XOffset;
+		float Y =  YOffset * YSign;
+		FVector Offset = FVector(X, Y, 0);
+		if (i == SplinePoints / 2) {
+			PondSpline->SetRelativeLocation(-Offset);
+		}
+		PondSpline->AddSplinePoint(Offset, ESplineCoordinateSpace::Local);
+	}
+	
+}
+
+void APCG_Pond::MakeEllipsisSpline()
+{
+	PondSpline->ClearSplinePoints();
+	int SplinePoints = PondLength / 25;
+	for (int i = 0; i < SplinePoints; i++) {
+		float AngleDeg = PI * 2 * ((float)i / SplinePoints);
+		float X = PondLength * FMath::Cos(AngleDeg);
+		float Y = PondWidth * FMath::Sin(AngleDeg);
 		PondSpline->AddSplinePoint(FVector(X, Y, 0), ESplineCoordinateSpace::Local);
 	}
 }
@@ -67,7 +111,7 @@ void APCG_Pond::UpdateSphereRadius()
 	SphereComponent->SetSphereRadius(FMath::Sqrt(MaxDistance));
 }
 
-void APCG_Pond::UpdateSplinePointsFromPCG(FPCGTaggedData Data)
+void APCG_Pond::UpdateSplinePointsUsingPCGData(FPCGTaggedData Data)
 {
 	PondSpline->ClearSplinePoints();
 	const UPCGPointData* PointsData = (UPCGPointData*)Data.Data;
@@ -81,4 +125,13 @@ void APCG_Pond::UpdateSplinePointsFromPCG(FPCGTaggedData Data)
 		PondSpline->SetTangentAtSplinePoint(Point.MetadataEntry, Tangent, ESplineCoordinateSpace::World);
 	}
 	UpdateSphereRadius();
+}
+
+void APCG_Pond::DigUsingPCGData(FPCGTaggedData Data)
+{
+
+}
+
+void APCG_Pond::MakeBordersUsingPCGData(FPCGTaggedData Data)
+{
 }
