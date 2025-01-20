@@ -11,6 +11,8 @@ APCG_FlowerField::APCG_FlowerField()
 {
 	PCGSpreadingComponent = CreateDefaultSubobject<UPCGComponent>("PCGSpreadingComponent");
 	PCGSpreadingComponent->GenerationTrigger = EPCGComponentGenerationTrigger::GenerateOnDemand;
+	PCGSpreadingComponent->PostGenerateFunctionNames.Add(FName("PCGEndGraphCallback"));
+
 }
 
 void APCG_FlowerField::BeginPlay()

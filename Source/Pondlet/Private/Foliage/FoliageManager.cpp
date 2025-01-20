@@ -19,7 +19,7 @@ void AFoliageManager::BeginPlay()
 
 	TSet<UActorComponent*> Components = GetComponents();
 	for (UActorComponent* Component : Components) {
-		if(RootComponent != Component)
+		if (RootComponent != Component)
 			Component->DestroyComponent();
 	}
 
@@ -47,14 +47,16 @@ UStaticMeshComponent* AFoliageManager::SpawnFoliage(FTransform Transform, UStati
 	{
 		MeshComponent->SetStaticMesh(FoliageMesh);
 		MeshComponent->ComponentTags.Add("Foliage");
-		FTransform LogicTransform;
-		UFoliageLogicComponent* FoliageLogicComponent = (UFoliageLogicComponent*)AddComponentByClass(UFoliageLogicComponent::StaticClass(), false, LogicTransform, false);
-		if (FoliageLogicComponent)
-		{
-			FoliageLogicComponent->SetFoliageMesh(MeshComponent);
+		if (GrassAndFlowers.Contains(FoliageMesh)) {
+			FTransform LogicTransform;
+			UFoliageLogicComponent* FoliageLogicComponent = (UFoliageLogicComponent*)AddComponentByClass(UFoliageLogicComponent::StaticClass(), false, LogicTransform, false);
+			if (FoliageLogicComponent)
+			{
+				FoliageLogicComponent->SetFoliageMesh(MeshComponent);
+			}
 		}
 		MeshComponent->SetVisibility(false);
-		MeshComponent ->CastShadow = !ShadowlessMeshes.Contains(FoliageMesh);
+		MeshComponent->CastShadow = !ShadowlessMeshes.Contains(FoliageMesh);
 	}
 	return MeshComponent;
 }
@@ -79,7 +81,7 @@ void AFoliageManager::ClearFoliage()
 {
 	TArray<UActorComponent*> Components;
 	GetComponents(Components);
-	for (UActorComponent * Component : Components) {
+	for (UActorComponent* Component : Components) {
 		if (Component->IsA(UFoliageLogicComponent::StaticClass()) || Component->IsA(UStaticMeshComponent::StaticClass())) {
 			Component->DestroyComponent();
 		}

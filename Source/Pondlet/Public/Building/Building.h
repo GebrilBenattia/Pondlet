@@ -15,9 +15,7 @@ public:
 	// Sets default values for this actor's properties
 	ABuilding();
 
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
+
 
 public:	
 	// Called every frame
@@ -26,8 +24,20 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void ChangeBuildingMesh(UStaticMesh* Mesh);
 
+protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
+
+	void PlaySequence();
+
 protected : 
 	UPROPERTY(EditAnywhere)
 	UStaticMesh* BuildingMesh;
+
+	/*UPROPERTY(EditAnywhere)
+	class UActorSequenceComponent* ActorSequence;
+
+	UPROPERTY(EditAnywhere)
+	class ACEClonerLayoutMesh * Layout;*/
 
 };

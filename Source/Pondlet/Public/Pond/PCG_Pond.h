@@ -4,10 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "PCG/PCG_Actor.h"
+#include "Metadata/PCGMetadata.h"
+#include "LandscapeEditing/LandscapePatchActor.h"
 #include "PCG_Pond.generated.h"
 
 /**
- * 
+ *
  */
 UCLASS()
 class PONDLET_API APCG_Pond : public APCG_Actor
@@ -15,18 +17,33 @@ class PONDLET_API APCG_Pond : public APCG_Actor
 	GENERATED_BODY()
 
 
-public : 
+public:
 	APCG_Pond();
 
 	void OnConstruction(const FTransform& Transform) override;
 
-protected : 
+	void BeginPlay() override;
+
+	UFUNCTION(CallInEditor, Category = "DiscMeshes")
+	void CoverPondByDiscs();
+
+	UFUNCTION(CallInEditor, Category = "DiscMeshes")
+	void RemovePondDiscs();
+
+	float GetPondRadius() const { return MaxDistance; }
+
+	void DigPhase();
+
+
+protected:
 	void PCGDataHandler(FPCGTaggedData Data) override;
 
-	UFUNCTION(CallInEditor,Category="Spline Reset")
+	void RefreshPCG() override;
+
+	UFUNCTION(CallInEditor, Category = "Spline Reset")
 	void MakeCircleSpline();
 
-	UFUNCTION(CallInEditor,BlueprintCallable,Category = "Spline Reset")
+	UFUNCTION(CallInEditor, BlueprintCallable, Category = "Spline Reset")
 	void MakeEllipsisSpline();
 
 	UFUNCTION(CallInEditor, BlueprintCallable, Category = "Spline Reset")
@@ -35,9 +52,13 @@ protected :
 	UFUNCTION(CallInEditor, Category = "PCG")
 	void EditorRegeneration();
 
-private : 
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class ALandscapePatchActor> PatchClass;
+
+private:
 
 	void UpdateSphereRadius();
+
 
 	void UpdateSplinePointsUsingPCGData(FPCGTaggedData Data);
 
@@ -45,30 +66,90 @@ private :
 
 	void MakeBordersUsingPCGData(FPCGTaggedData Data);
 
-protected :
+	float PointToDepth(FPCGPoint Point, const FPCGMetadataAttribute<float>* Metadata)const;
+
+	void CreateWaterBody();
+
+	void AskForPicture();
+
+protected:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	class UPCGComponent* PCGSplineComponent;
+
 	UPROPERTY(EditAnywhere)
 	class USplineComponent* PondSpline;
 
 	UPROPERTY(EditAnywhere)
 	class USphereComponent* SphereComponent;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (ExposeOnSpawn = "true"))
-	int PondLength;
+	UPROPERTY(EditAnywhere)
+	class UStaticMesh* WaterPlane;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (ExposeOnSpawn = "true"))
-	int PondWidth;
+	UPROPERTY(EditAnywhere)
+	class UMaterial* WaterMaterial;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (ExposeOnSpawn = "true"))
-	int SplineNumberOfPoints;
+	UPROPERTY(EditAnywhere)
+	class UInstancedStaticMeshComponent* FloorISMComponent;
+	UPROPERTY(EditAnywhere)
+	class UInstancedStaticMeshComponent* WallISMComponent;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (ExposeOnSpawn = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	class UStaticMesh* DiscMesh;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	class UStaticMesh* PondFloorMesh;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	class UStaticMesh* PondWallsMesh;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "PondSettings", meta = (ExposeOnSpawn = "true"))
+	int PondLength = 1000;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "PondSettings", meta = (ExposeOnSpawn = "true"))
+	int PondWidth = 700;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "PondSettings", meta = (ExposeOnSpawn = "true"))
+	int NumberOfRocks = 10;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "PondSettings", meta = (ExposeOnSpawn = "true"))
+	int OutlineHeight = 50;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "PondSettings", meta = (ExposeOnSpawn = "true"))
+	int PondMaxDepth = 50;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "PondSettings", meta = (ExposeOnSpawn = "true"))
+	float PondDistanceToDepthMultiplier = 1.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "PondSettings", meta = (ExposeOnSpawn = "true"))
+	int SplineNumberOfPoints = 10;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "PondSettings", meta = (ExposeOnSpawn = "true"))
 	float MaxTangentAngleOffset = 30;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (ExposeOnSpawn = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "PondSettings", meta = (ExposeOnSpawn = "true"))
 	int MinTangentLength = 100;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (ExposeOnSpawn = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "PondSettings", meta = (ExposeOnSpawn = "true"))
 	int MaxTangentLength = 500;
-	
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "PondSettings", meta = (ExposeOnSpawn = "true"))
+	float LandscapeDiggingRadius = 100;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "PondSettings", meta = (ExposeOnSpawn = "true"))
+	float LandscapeDiggingFalloff = 200;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "PondSettings", meta = (ExposeOnSpawn = "true", ClampMin = "75"))
+	float MinDistanceBetweenCenterAndSides = 200;
+
+private:
+
+	float MaxDistance;
+
+	UPROPERTY()
+	TArray<FVector> DepthPointsLocation = TArray<FVector>();
+
+	UPROPERTY()
+	TArray<class UStaticMeshComponent*> DiscMeshComponents = TArray<class UStaticMeshComponent*>();
+
 
 };

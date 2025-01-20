@@ -19,6 +19,11 @@ public:
 
 	virtual void OnConstruction(const FTransform &Transform) override;
 
+	void SetLandscapePatchRadius(float NewRadius);
+
+	void SetLandscapePatchFalloff(float NewFalloff);
+	
+	void UpdatePatchValues();
 
 
 
@@ -33,7 +38,4 @@ public :
 protected : 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Pondlet")
 	class USceneComponent* SceneComponent;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Pondlet")
-	class UPondletLCHPatch* LandscapeCircleHeightPatchComponent;
-
 };

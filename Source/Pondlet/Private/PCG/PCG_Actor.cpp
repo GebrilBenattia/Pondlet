@@ -22,11 +22,13 @@ APCG_Actor::APCG_Actor()
 	RootComponent = CreateDefaultSubobject<USceneComponent>("SceneComponent");
 	PCGComponent = CreateDefaultSubobject<UPCGComponent>("PCGComponent");
 	PCGComponent->GenerationTrigger = EPCGComponentGenerationTrigger::GenerateOnDemand;
+	PCGComponent->bIsComponentPartitioned = false;
+	PCGComponent->PostGenerateFunctionNames.Add(FName("PCGEndGraphCallback"));
 
+	
 	BoxComponent = CreateDefaultSubobject<UBoxComponent>("BoxComponent");
 	BoxComponent->SetupAttachment(RootComponent);
 	Meshes.Empty();
-
 
 }
 
@@ -34,7 +36,6 @@ APCG_Actor::APCG_Actor()
 void APCG_Actor::BeginPlay()
 {
 	Super::BeginPlay();
-
 	PCGComponent->Cleanup();
 
 	int Seed = FMath::Rand();
@@ -75,6 +76,7 @@ void APCG_Actor::BeginPlay()
 	FoliageManager = (AFoliageManager*)UGameplayStatics::GetActorOfClass(GetWorld(), AFoliageManager::StaticClass());
 
 	if (SpawnTimeline != NULL && bShouldAnimate) {
+		RefreshPCG();
 		PlayTimeline();
 	}
 	else {
@@ -92,6 +94,7 @@ void APCG_Actor::OnConstruction(const FTransform& Transform)
 void APCG_Actor::UpdateDisplayRadius()
 {
 	for (UStaticMeshComponent* Mesh : Meshes) {
+		if (!Mesh) return;
 		FVector MeshLocation = Mesh->GetComponentLocation();
 		FVector ActorLocation = GetActorLocation();
 		float Distance = FVector::Distance(MeshLocation, ActorLocation);
@@ -145,7 +148,6 @@ void APCG_Actor::PCGMeshPointsHandler(FPCGTaggedData Data)
 	const UPCGMetadata* Metadata = PointData->Metadata;
 	const FPCGMetadataAttribute<FSoftObjectPath >* MetadataAttributePath = Metadata->GetConstTypedAttribute<FSoftObjectPath>("Mesh");
 	const FPCGMetadataAttribute<double >* MetadataAttributeScale = Metadata->GetConstTypedAttribute<double>("Scale");
-	const FPCGMetadataAttributeBase* test = Metadata->GetConstAttribute("Mesh");
 	for (const FPCGPoint Point : PointData->GetPoints()) {
 
 		FSoftObjectPath MeshPath = MetadataAttributePath->GetValueFromItemKey(Point.MetadataEntry);
@@ -197,5 +199,5 @@ void APCG_Actor::PlayTimeline()
 void APCG_Actor::RefreshPCG()
 {
 	PCGComponent->NotifyPropertiesChangedFromBlueprint();
-	PCGComponent->GenerateLocal(false);
+	PCGComponent->Generate(false);
 }

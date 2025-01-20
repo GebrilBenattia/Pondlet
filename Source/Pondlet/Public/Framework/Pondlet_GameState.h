@@ -7,10 +7,14 @@
 #include "Pondlet_GameState.generated.h"
 
 
+// Delegate signature
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnTakePictureDelegate);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPictureTakenDelegate);
+
 USTRUCT(BlueprintType)
 struct FEcosystemSpawnParameters {
 	GENERATED_USTRUCT_BODY()
-	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<class APCG_Actor> PCGActorClass;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -31,22 +35,53 @@ class PONDLET_API APondlet_GameState : public AGameStateBase
 	GENERATED_BODY()
 
 
-public : 
+public:
 	UFUNCTION(BlueprintCallable)
 	void ResetEcosystem(FEcosystemSpawnParameters SpawnParam);
 
 	APondlet_GameState();
 
-private : 
-	UFUNCTION()
-	void SpawnStructure(class UStaticMesh* StructureMesh,FVector Location);
+	void BeginPlay()override;
 
-protected : 
+	UFUNCTION()
+	void TakeMapScreen();
+
+private:
+	UFUNCTION()
+	void SpawnStructure(class UStaticMesh* StructureMesh, FVector Location);
+
+	UFUNCTION()
+	void RandomPondGeneration();
+
+	UFUNCTION()
+	void PictureTakenBroadcast();
+
+public:
+	UPROPERTY(BlueprintAssignable)
+	FOnTakePictureDelegate OnTakePicture;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnPictureTakenDelegate OnPictureTaken;
+
+protected:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class ABuilding> BuildingClass;
 
-private : 
 	UPROPERTY(EditAnywhere)
-	class AStaticMeshActor* Structure;
+	TSubclassOf<class AMapScreener> MapScreenerClass;
+
+	UPROPERTY(EditAnywhere)
+	FVector SimulationSize = FVector(4000, 4000, 200);
+
+
+private:
+	UPROPERTY(EditAnywhere)
+	class ABuilding* Building;
+
+	UPROPERTY(EditAnywhere)
+	class AMapScreener* MapScreener;
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class APCG_Pond> PCGPondClass;
 
 };

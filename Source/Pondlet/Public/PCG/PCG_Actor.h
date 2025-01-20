@@ -12,8 +12,8 @@ UCLASS()
 class APCG_Actor : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	// Sets default values for this actor's properties
 	APCG_Actor();
 
@@ -47,47 +47,43 @@ protected:
 	UFUNCTION(CallInEditor)
 	virtual void PCGEndGraphCallback(FPCGDataCollection Output);
 
+	UFUNCTION()
+	virtual void RefreshPCG();
 
-private : 
+private:
 	UFUNCTION()
 	void TimelineCallback(float val);
 
-	
-
 	void PlayTimeline();
-
-	UFUNCTION()
-	void RefreshPCG();
 
 	void UpdateVolumeSize(FVector NewVolume);
 
-	
 
 	UFUNCTION()
 	void SpawnFoliage(UStaticMesh* Mesh, FTransform Transform);
 
-	
-	
+
+
 
 public:
 
 	UPROPERTY(EditAnywhere, Category = "PCGAttributes", BlueprintReadOnly, meta = (ExposeOnSpawn = "true", ToolTip = "Tells the size needed for each point you want to generate"))
-	FVector PointExtent = FVector(1, 1, 1);
+	FVector PointExtent = FVector(5,5, 1);
 
 	UPROPERTY(EditAnywhere, Category = "PCGAttributes", BlueprintReadOnly, meta = (ExposeOnSpawn = "true", ToolTip = "Tells how many points you want to generate in a squared meter"))
-	float PointPerSquaredMeter = 1.0f;
+	float PointPerSquaredMeter = 10.0f;
 
 	UPROPERTY(EditAnywhere, Category = "PCGAttributes", BlueprintReadOnly, meta = (ExposeOnSpawn = "true", ToolTip = "Tells how much the points will be on a grid (The more the value the more apparent is the grid)"))
 	float Looseness = 1.0f;
-	
+
 	UPROPERTY(BlueprintReadOnly, meta = (ExposeOnSpawn = "true"))
 	FVector ActorPositionPCG;
 
-protected : 
+protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	class UPCGComponent* PCGComponent; 
+	class UPCGComponent* PCGComponent;
 
-	UPROPERTY(EditAnywhere,BlueprintReadOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	class UBoxComponent* BoxComponent;
 
 	UPROPERTY(EditAnywhere, meta = (ToolTip = "Only x = 0 to x = 1 in the curve will matter"))
@@ -98,25 +94,16 @@ protected :
 	UPROPERTY(EditAnywhere)
 	float AnimationDuration = 2.0f;
 
-	UPROPERTY(EditAnywhere,meta = (ToolTip = "Choose whether the spawn of the PCG elements is progressive or if all the elements shall appear at the same time"))
+	UPROPERTY(EditAnywhere, meta = (ToolTip = "Choose whether the spawn of the PCG elements is progressive or if all the elements shall appear at the same time"))
 	bool bShouldAnimate = true;
 
 
 	UPROPERTY(EditAnywhere)
-	FVector VolumeSize = FVector(100,100,100);
+	FVector VolumeSize = FVector(100, 100, 100);
 
 	UPROPERTY()
 	class AFoliageManager* FoliageManager;
 
-	
-private : 
-	UPROPERTY()
-	UTimelineComponent* SpawnTimeline;
-
-	UPROPERTY()
-	TEnumAsByte<ETimelineDirection::Type> TimelineDirection;
-
-	
 	UPROPERTY()
 	float DisplayRadius = 0.0f;
 
@@ -124,8 +111,19 @@ private :
 	float MaxDisplayRadius = 100.0f;
 
 
+private:
+	UPROPERTY()
+	UTimelineComponent* SpawnTimeline;
+
+	UPROPERTY()
+	TEnumAsByte<ETimelineDirection::Type> TimelineDirection;
+
+
+	
+
+
 	UPROPERTY()
 	TArray<class UStaticMeshComponent*> Meshes;
 
-	
+
 };

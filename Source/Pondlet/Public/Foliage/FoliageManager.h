@@ -36,6 +36,9 @@ protected :
 
 	UPROPERTY(EditAnywhere)
 	TArray<UStaticMesh*> ShadowlessMeshes;
+
+	UPROPERTY(EditAnywhere)
+	TArray<UStaticMesh*> GrassAndFlowers;
 private : 
 	UPROPERTY()
 	TMap<FString, UStaticMesh*> MeshBuffer;

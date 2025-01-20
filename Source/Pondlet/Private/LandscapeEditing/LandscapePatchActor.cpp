@@ -2,7 +2,6 @@
 
 
 #include "LandscapeEditing/LandscapePatchActor.h"
-#include "LandscapeEditing/PondletLCHPatch.h"
 
 // Sets default values
 ALandscapePatchActor::ALandscapePatchActor()
@@ -12,28 +11,32 @@ ALandscapePatchActor::ALandscapePatchActor()
 	SceneComponent = CreateDefaultSubobject<USceneComponent>(TEXT("SceneComponent"));
 	SetRootComponent(SceneComponent);
 
-	LandscapeCircleHeightPatchComponent = CreateDefaultSubobject<UPondletLCHPatch>(TEXT("LandscapeCircleHeightPatchComponent"));
-	LandscapeCircleHeightPatchComponent->SetupAttachment(RootComponent);
 }
 
 void ALandscapePatchActor::BeginPlay()
 {
-	
+	Super::BeginPlay();
+	UpdatePatchValues();
 }
 
 void ALandscapePatchActor::OnConstruction(const FTransform& Transform)
 {
-	if (LandscapeCircleHeightPatchComponent)
-	{
-		if (LandscapePatchRadius >= 0.0f)
-		{
-			LandscapeCircleHeightPatchComponent->SetRadiusOverride(LandscapePatchRadius);
-		}
-		if (LandscapePatchFalloff >= 0.0f)
-		{
-			LandscapeCircleHeightPatchComponent->SetFalloffOverride(LandscapePatchFalloff);
-		}
-	}
+	Super::OnConstruction(Transform);
+	UpdatePatchValues();
+}
+
+void ALandscapePatchActor::UpdatePatchValues() {
+	
+}
+
+void ALandscapePatchActor::SetLandscapePatchRadius(float NewRadius)
+{
+	LandscapePatchRadius = NewRadius;
+}
+
+void ALandscapePatchActor::SetLandscapePatchFalloff(float NewFalloff)
+{
+	LandscapePatchFalloff = NewFalloff;
 }
 
 
