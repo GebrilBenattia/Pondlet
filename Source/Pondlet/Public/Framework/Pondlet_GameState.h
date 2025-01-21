@@ -21,7 +21,7 @@ struct FEcosystemSpawnParameters {
 	class UPCGGraph* PCGGraph;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	class UStaticMesh* Structure;
+	TSubclassOf<class ABuilding> BuildingClass;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FVector Location;
@@ -48,7 +48,7 @@ public:
 
 private:
 	UFUNCTION()
-	void SpawnStructure(class UStaticMesh* StructureMesh, FVector Location);
+	void SpawnStructure(TSubclassOf<class ABuilding>  NewBuildingClass, FVector Location);
 
 	UFUNCTION()
 	void RandomPondGeneration();
@@ -73,13 +73,21 @@ protected:
 	UPROPERTY(EditAnywhere)
 	FVector SimulationSize = FVector(4000, 4000, 200);
 
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class ABuildingSpawner> BuildingSpawnerClass;
+
+	UPROPERTY(EditAnywhere)
+	FVector BuildingSpawnPos = FVector(0, 0, 100);
 
 private:
-	UPROPERTY(EditAnywhere)
-	class ABuilding* Building;
+	/*UPROPERTY(EditAnywhere)
+	class ABuilding* Building;*/
 
 	UPROPERTY(EditAnywhere)
 	class AMapScreener* MapScreener;
+
+	UPROPERTY(EditAnywhere)
+	class ABuildingSpawner* BuildingSpawner;
 
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class APCG_Pond> PCGPondClass;

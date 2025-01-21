@@ -15,29 +15,35 @@ public:
 	// Sets default values for this actor's properties
 	ABuilding();
 
-
-
-public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	UFUNCTION(BlueprintCallable)
-	void ChangeBuildingMesh(UStaticMesh* Mesh);
+
+	void ResetEffectorPosition();
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	virtual void OnConstruction(const FTransform& Transform) override;
+
 	void PlaySequence();
 
+private :
+	void TryInitLayout();
+
+	void TryInitEffector();
 protected : 
-	UPROPERTY(EditAnywhere)
-	UStaticMesh* BuildingMesh;
+	UPROPERTY(EditAnywhere,BlueprintReadOnly)
+	class UStaticMeshComponent * StaticMeshComponent;
 
-	/*UPROPERTY(EditAnywhere)
-	class UActorSequenceComponent* ActorSequence;
+	UPROPERTY(VisibleAnywhere, meta=(Tooltip="You NEED to add an ActorSequencer in the blueprint"))
+	class UActorSequenceComponent* ActorSequenceComponent;
+	
+	UPROPERTY(EditAnywhere)
+	class UCEClonerMeshLayout * MossLayout;
 
 	UPROPERTY(EditAnywhere)
-	class ACEClonerLayoutMesh * Layout;*/
+	class ACEEffectorActor* MossEffector;
 
 };

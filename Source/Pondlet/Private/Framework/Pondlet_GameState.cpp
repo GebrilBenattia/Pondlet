@@ -10,6 +10,7 @@
 #include "Engine/StaticMeshActor.h"
 #include "LandscapeEditing/MapScreener.h"
 #include "Pond/PCG_Pond.h"
+#include "Building/BuildingSpawner.h"
 
 
 
@@ -30,6 +31,8 @@ APondlet_GameState::APondlet_GameState()
 		PCGPondClass = PondClassFinder.Class;
 	}
 
+
+
 }
 
 void APondlet_GameState::BeginPlay()
@@ -43,6 +46,12 @@ void APondlet_GameState::BeginPlay()
 		if (MapScreener) {
 			MapScreener->OnPictureTaken.BindUFunction(this, "PictureTakenBroadcast");
 		}
+	}
+
+	if (BuildingSpawnerClass) {
+		FTransform SpawnerTransform;
+		Transform.SetLocation(BuildingSpawnPos);
+		BuildingSpawner = GetWorld()->SpawnActor<ABuildingSpawner>(BuildingSpawnerClass, Transform, SpawnParams);
 	}
 }
 
@@ -63,7 +72,7 @@ void APondlet_GameState::ResetEcosystem(FEcosystemSpawnParameters SpawnParam)
 		FoliageManager->ClearFoliage();
 	}
 	// Spawn the new structure according to the parameters
-	SpawnStructure(SpawnParam.Structure, SpawnParam.Location);
+	SpawnStructure(SpawnParam.BuildingClass, SpawnParam.Location);
 
 	// Spawn the Pond
 	RandomPondGeneration();
@@ -93,9 +102,9 @@ void APondlet_GameState::ResetEcosystem(FEcosystemSpawnParameters SpawnParam)
 
 
 
-void APondlet_GameState::SpawnStructure(UStaticMesh* StructureMesh, FVector Location)
+void APondlet_GameState::SpawnStructure(TSubclassOf<class ABuilding>  NewBuildingClass, FVector Location)
 {
-	if (!StructureMesh) {
+	/*if (!StructureMesh) {
 		UE_LOG(LogTemp, Warning, TEXT("Structure is null"));
 		return;
 	}
@@ -105,10 +114,14 @@ void APondlet_GameState::SpawnStructure(UStaticMesh* StructureMesh, FVector Loca
 
 		Transform.SetLocation(Location);
 		Building = GetWorld()->SpawnActor<ABuilding>(BuildingClass, Transform, SpawnParams);
+	}*/
+	if (BuildingSpawner) {
+		BuildingSpawner->ChangeBuilding(NewBuildingClass);
+
 	}
-	Building->ChangeBuildingMesh(StructureMesh);
+	/*Building->ChangeBuildingMesh(StructureMesh);
 	Building->SetActorLocation(Location);
-	Building->Tags.Add("PCGExclude");
+	Building->Tags.Add("PCGExclude");*/
 }
 
 void APondlet_GameState::RandomPondGeneration()
