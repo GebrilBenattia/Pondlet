@@ -42,6 +42,10 @@
 		{
 			"Name": "NaniteDisplacedMesh",
 			"Enabled": true
+		},
+		{
+			"Name": "GameplayStateTree",
+			"Enabled": true
 		}
 	]
 }

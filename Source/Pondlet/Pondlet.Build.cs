@@ -8,7 +8,7 @@ public class Pondlet : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 	
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput","PCG", "LandscapePatch" });
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput","PCG", "LandscapePatch", "GameplayStateTreeModule", "AIModule", "StateTreeModule" });
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
 
