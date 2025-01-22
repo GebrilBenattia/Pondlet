@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "WeatherCycleSettings.h"
 #include "FoliageManager.generated.h"
 
 UCLASS()
@@ -31,6 +32,18 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void ClearFoliage();
 
+	UFUNCTION(BlueprintCallable)
+	void ChangeWeather(FName NewWeather);
+
+private : 
+	void AgeFoliage(float DeltaTime);
+
+
+public :  
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	FName CurrentWeather;
+
+	
 
 protected : 
 
@@ -39,6 +52,14 @@ protected :
 
 	UPROPERTY(EditAnywhere)
 	TArray<UStaticMesh*> GrassAndFlowers;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Settings", meta = (AllowPrivateAccess = "true"))
+
+	class UWeatherCycleSettings* WeatherCycleSettings;
+
+	FWeatherStateSettings WeatherStateSettings;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Time", meta = (AllowPrivateAccess = "true"))
+	class UTimeManagerSettingsDataAsset* TimeManagerSettings;
+
 private : 
 	UPROPERTY()
 	TMap<FString, UStaticMesh*> MeshBuffer;

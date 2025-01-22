@@ -73,6 +73,7 @@ private:
 	void AskForPicture();
 
 protected:
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	class UPCGComponent* PCGSplineComponent;
 
@@ -86,7 +87,7 @@ protected:
 	class UStaticMesh* WaterPlane;
 
 	UPROPERTY(EditAnywhere)
-	class UMaterial* WaterMaterial;
+	class UMaterialInstance* WaterMaterial;
 
 	UPROPERTY(EditAnywhere)
 	class UInstancedStaticMeshComponent* FloorISMComponent;

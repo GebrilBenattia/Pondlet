@@ -153,7 +153,7 @@ void APCG_Actor::PCGMeshPointsHandler(FPCGTaggedData Data)
 		FSoftObjectPath MeshPath = MetadataAttributePath->GetValueFromItemKey(Point.MetadataEntry);
 		double Scale = MetadataAttributeScale->GetValueFromItemKey(Point.MetadataEntry);
 		UStaticMesh* Mesh = FoliageManager->LoadMeshFromBuffer(MeshPath);
-		FTransform Transform{ Point.Transform.GetRotation(),Point.Transform.GetLocation(),  FVector(Scale) * Point.Transform.GetScale3D() };
+		FTransform Transform{ Point.Transform.GetRotation().GetNormalized(),Point.Transform.GetLocation(),  FVector(Scale) * Point.Transform.GetScale3D()};
 		if (Mesh) {
 			SpawnFoliage(Mesh, Transform);
 		}

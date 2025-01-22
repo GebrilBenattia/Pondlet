@@ -4,6 +4,8 @@
 #include "Foliage/FoliageManager.h"
 #include "Foliage/FoliageLogicComponent.h"
 #include "AssetRegistry/IAssetRegistry.h"
+#include "WeatherCycleSettings.h"
+#include "TimeManagerSettingsDataAsset.h"
 
 // Sets default values
 AFoliageManager::AFoliageManager()
@@ -32,6 +34,7 @@ void AFoliageManager::BeginPlay()
 void AFoliageManager::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	AgeFoliage(DeltaTime);
 
 }
 
@@ -84,6 +87,34 @@ void AFoliageManager::ClearFoliage()
 	for (UActorComponent* Component : Components) {
 		if (Component->IsA(UFoliageLogicComponent::StaticClass()) || Component->IsA(UStaticMeshComponent::StaticClass())) {
 			Component->DestroyComponent();
+		}
+	}
+}
+
+void AFoliageManager::ChangeWeather(FName NewWeather)
+{
+	CurrentWeather = NewWeather;
+	if (WeatherCycleSettings) {
+		WeatherCycleSettings->GetSettingsByName(CurrentWeather, WeatherStateSettings);
+	}
+}
+
+void AFoliageManager::AgeFoliage(float DeltaTime)
+{
+	TArray<UActorComponent*> Logics;
+	GetComponents(UFoliageLogicComponent::StaticClass(), Logics);
+	float AgeValue = DeltaTime;
+	if (WeatherCycleSettings) {
+		AgeValue *= WeatherStateSettings.FoliageGrowthScale;
+	}
+	if (TimeManagerSettings) {
+		AgeValue *= TimeManagerSettings ->TimeScale;
+	}
+	//UE_LOG(LogTemp, Warning, TEXT("DT %f, WSSFGS %f, TMSTS %f ,AgeVal = %f"), DeltaTime, WeatherStateSettings.FoliageGrowthScale, TimeManagerSettings->TimeScale, AgeValue);
+	for (UActorComponent * Logic : Logics) {
+		UFoliageLogicComponent* FoliageLogic = (UFoliageLogicComponent*)Logic;
+		if (FoliageLogic) {
+			FoliageLogic -> AgeFoliage(AgeValue);
 		}
 	}
 }

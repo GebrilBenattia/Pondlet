@@ -104,20 +104,13 @@ void APondlet_GameState::ResetEcosystem(FEcosystemSpawnParameters SpawnParam)
 
 void APondlet_GameState::SpawnStructure(TSubclassOf<class ABuilding>  NewBuildingClass, FVector Location)
 {
-	/*if (!StructureMesh) {
-		UE_LOG(LogTemp, Warning, TEXT("Structure is null"));
-		return;
-	}
-	if (!Building) {
-		FTransform Transform;
-		FActorSpawnParameters SpawnParams;
-
-		Transform.SetLocation(Location);
-		Building = GetWorld()->SpawnActor<ABuilding>(BuildingClass, Transform, SpawnParams);
-	}*/
 	if (BuildingSpawner) {
 		BuildingSpawner->ChangeBuilding(NewBuildingClass);
 
+	}
+	ABuilding* Building = (ABuilding * )UGameplayStatics::GetActorOfClass(GetWorld(),ABuilding::StaticClass());
+	if (Building) {
+		Building->ResetMoss();
 	}
 	/*Building->ChangeBuildingMesh(StructureMesh);
 	Building->SetActorLocation(Location);

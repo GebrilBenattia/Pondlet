@@ -8,9 +8,7 @@ UFoliageLogicComponent::UFoliageLogicComponent()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = true;
 
-	// ...
 }
 
 
@@ -18,6 +16,8 @@ UFoliageLogicComponent::UFoliageLogicComponent()
 void UFoliageLogicComponent::BeginPlay()
 {
 	Super::BeginPlay();
+	float Offset = FMath::RandRange(-0.2f, 0.2f);
+	MaxScale += FVector(Offset);
 	// ...
 
 }
@@ -29,7 +29,6 @@ void UFoliageLogicComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// ...
-	AgeFoliage(DeltaTime);
 }
 
 void UFoliageLogicComponent::SetFoliageMesh(UStaticMeshComponent* Mesh)

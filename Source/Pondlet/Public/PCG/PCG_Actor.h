@@ -110,6 +110,8 @@ protected:
 	UPROPERTY()
 	float MaxDisplayRadius = 100.0f;
 
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,meta = (AllowPrivateAccess = "true"))
+	TArray<class UStaticMeshComponent*> Meshes;
 
 private:
 	UPROPERTY()
@@ -122,8 +124,7 @@ private:
 	
 
 
-	UPROPERTY()
-	TArray<class UStaticMeshComponent*> Meshes;
+	
 
 
 };

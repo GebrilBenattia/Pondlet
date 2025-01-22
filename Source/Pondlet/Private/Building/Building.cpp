@@ -106,3 +106,11 @@ void ABuilding::ResetEffectorPosition()
 	}
 }
 
+void ABuilding::ResetMoss()
+{
+	ResetEffectorPosition();
+	if (MossLayout) {
+		MossLayout->SetCount(0);
+	}
+}
+
