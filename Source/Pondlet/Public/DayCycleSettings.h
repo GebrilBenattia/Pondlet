@@ -22,6 +22,11 @@ struct FDayStateSettings
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Time", meta = (AllowPrivateAccess = "true"))
     float End24HourFormat;
 
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Light", meta = (AllowPrivateAccess = "true", ClampMin = "-360", ClampMax = "360"))
+    float StartLightAngle;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Light", meta = (AllowPrivateAccess = "true", ClampMin = "-360", ClampMax = "360"))
+    float EndLightAngle;
     /*UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Time", meta = (AllowPrivateAccess = "true"))
     float Start12HourFormat;
 
