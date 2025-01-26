@@ -43,7 +43,7 @@ UStaticMeshComponent* AFoliageManager::SpawnFoliage(FTransform Transform, UStati
 	FTransform ActorTransform = GetActorTransform();
 	FTransform SpawnTransform;
 	SpawnTransform.SetLocation(ActorTransform.InverseTransformPosition(Transform.GetLocation()));
-	SpawnTransform.SetRotation(ActorTransform.InverseTransformRotation(Transform.GetRotation()));
+	SpawnTransform.SetRotation(ActorTransform.InverseTransformRotation(Transform.GetRotation()).GetNormalized());
 	SpawnTransform.SetScale3D(Transform.GetScale3D());
 	UStaticMeshComponent* MeshComponent = (UStaticMeshComponent*)AddComponentByClass(UStaticMeshComponent::StaticClass(), false, SpawnTransform, false);
 	if (MeshComponent)
@@ -53,6 +53,7 @@ UStaticMeshComponent* AFoliageManager::SpawnFoliage(FTransform Transform, UStati
 		if (GrassAndFlowers.Contains(FoliageMesh)) {
 			FTransform LogicTransform;
 			UFoliageLogicComponent* FoliageLogicComponent = (UFoliageLogicComponent*)AddComponentByClass(UFoliageLogicComponent::StaticClass(), false, LogicTransform, false);
+			MeshComponent->SetWorldScale3D(FVector(0.2f));
 			if (FoliageLogicComponent)
 			{
 				FoliageLogicComponent->SetFoliageMesh(MeshComponent);

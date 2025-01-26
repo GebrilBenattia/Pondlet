@@ -29,7 +29,7 @@ public :
 	float Oldness = 0.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float TimeToGrow = 200;
+	float TimeToGrow = 10;
 
 	void SetFoliageMesh(UStaticMeshComponent* Mesh);
 	
@@ -39,7 +39,7 @@ public :
 	FVector MinScale = FVector(0.2);
 
 	UPROPERTY(EditAnywhere)
-	FVector MaxScale = FVector(0);
+	FVector MaxScale = FVector(1);
 
 
 protected : 

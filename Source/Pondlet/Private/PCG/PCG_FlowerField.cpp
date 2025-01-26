@@ -55,8 +55,9 @@ void APCG_FlowerField::PCGNextFlowerPoints(FPCGTaggedData Data)
 		FSoftObjectPath MeshPath = MetadataAttributePath->GetValueFromItemKey(Point.MetadataEntry);
 		double Scale = MetadataAttributeScale->GetValueFromItemKey(Point.MetadataEntry);
 		UStaticMesh* Mesh = FoliageManager->LoadMeshFromBuffer(MeshPath);
-		FTransform Transform{ Point.Transform.GetRotation(),Point.Transform.GetLocation(),  FVector(Scale) * Point.Transform.GetScale3D() };
+		//FTransform Transform{ Point.Transform.GetRotation().GetNormalized(),Point.Transform.GetLocation(),  FVector(Scale) * Point.Transform.GetScale3D()};
 		if (Mesh) {
+			UE_LOG(LogTemp, Warning, TEXT("Mesh : %s"), *Mesh->GetName());
 			int Angle = FMath::RandRange(-MaxAngleOffsetFromDirection, MaxAngleOffsetFromDirection);
 			int DistanceChild = FMath::RandRange(MinDistanceChild, MaxDistanceChild);
 			FVector Direction = (Point.Transform.GetLocation() - GetActorLocation()).GetSafeNormal();

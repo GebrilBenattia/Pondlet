@@ -11,7 +11,6 @@
 #include "Kismet/GameplayStatics.h"
 #include "Framework/Pondlet_GameState.h"
 #include "Components/InstancedStaticMeshComponent.h"
-#include "LandscapeEditing/LandscapePatchActor.h"
 
 APCG_Pond::APCG_Pond()
 {
@@ -257,13 +256,13 @@ void APCG_Pond::MakeBordersUsingPCGData(FPCGTaggedData Data)
 	for (FPCGPoint Point : PointData->GetPoints()) {
 		FVector PointLocation = Point.Transform.GetLocation();
 		FTransform RockTransform{
-			Point.Transform.GetRotation(),
+			Point.Transform.GetRotation().GetNormalized(),
 			Point.Transform.GetLocation() + FVector(0,0,OutlineHeight),
 			Point.Transform.GetScale3D()
 		};
 		// Use Transform to spawn rocks (Use the foliage manager for that)
 		FTransform WallTransform{
-			Point.Transform.GetRotation() * FQuat::MakeFromEuler(FVector(0, 0, 180)),
+			Point.Transform.GetRotation().GetNormalized() * FQuat::MakeFromEuler(FVector(0, 0, 180)),
 			Point.Transform.GetLocation() + FVector(0,0,-PondMaxDepth),
 			Point.Transform.GetScale3D() * 2.5f
 		};

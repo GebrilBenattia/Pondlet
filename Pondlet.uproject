@@ -9,8 +9,7 @@
 			"Type": "Runtime",
 			"LoadingPhase": "Default",
 			"AdditionalDependencies": [
-				"Engine",
-				"LandscapePatch"
+				"Engine"
 			]
 		}
 	],
@@ -27,6 +26,14 @@
 			"Enabled": true
 		},
 		{
+			"Name": "StateTree",
+			"Enabled": true
+		},
+		{
+			"Name": "ClonerEffector",
+			"Enabled": true
+		},
+		{
 			"Name": "Avalanche",
 			"Enabled": true,
 			"SupportedTargetPlatforms": [
@@ -36,16 +43,21 @@
 			]
 		},
 		{
-			"Name": "LandscapePatch",
-			"Enabled": true
-		},
-		{
 			"Name": "NaniteDisplacedMesh",
 			"Enabled": true
 		},
 		{
 			"Name": "GameplayStateTree",
 			"Enabled": true
+		},
+		{
+			"Name": "NNERuntimeRDG",
+			"Enabled": true,
+			"SupportedTargetPlatforms": [
+				"Win64",
+				"Linux",
+				"Mac"
+			]
 		}
 	]
 }

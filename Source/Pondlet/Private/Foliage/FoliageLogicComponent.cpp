@@ -18,6 +18,9 @@ void UFoliageLogicComponent::BeginPlay()
 	Super::BeginPlay();
 	float Offset = FMath::RandRange(-0.2f, 0.2f);
 	MaxScale += FVector(Offset);
+	if (FoliageMesh) {
+		FoliageMesh->SetWorldScale3D(MinScale);
+	}
 	// ...
 
 }
@@ -34,7 +37,7 @@ void UFoliageLogicComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 void UFoliageLogicComponent::SetFoliageMesh(UStaticMeshComponent* Mesh)
 {
 	FoliageMesh = Mesh;
-	FinalScale = Mesh->GetRelativeScale3D();
+	FinalScale = MaxScale;
 }
 
 void UFoliageLogicComponent::AgeFoliage(float Time)

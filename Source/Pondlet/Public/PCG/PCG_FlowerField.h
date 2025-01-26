@@ -86,6 +86,7 @@ protected :
 	float TimeBetweenSpreadings = 2.5f;
 
 private : 
+	UPROPERTY()
 	FTimerHandle SpreadingTimerHandle;
 
 	float SpreadingDistance = 100.0f;

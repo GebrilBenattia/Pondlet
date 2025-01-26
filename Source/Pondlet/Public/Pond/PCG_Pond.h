@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "PCG/PCG_Actor.h"
 #include "Metadata/PCGMetadata.h"
-#include "LandscapeEditing/LandscapePatchActor.h"
 #include "PCG_Pond.generated.h"
 
 /**
@@ -52,8 +51,6 @@ protected:
 	UFUNCTION(CallInEditor, Category = "PCG")
 	void EditorRegeneration();
 
-	UPROPERTY(EditAnywhere)
-	TSubclassOf<class ALandscapePatchActor> PatchClass;
 
 private:
 
