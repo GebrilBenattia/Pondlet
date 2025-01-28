@@ -100,6 +100,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	class UStaticMesh* PondWallsMesh;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	class UMaterialParameterCollection* LandscapeModifier;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "PondSettings", meta = (ExposeOnSpawn = "true"))
 	int PondLength = 1000;
 
@@ -136,7 +139,7 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "PondSettings", meta = (ExposeOnSpawn = "true"))
 	float LandscapeDiggingFalloff = 200;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "PondSettings", meta = (ExposeOnSpawn = "true", ClampMin = "75"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "PondSettings", meta = (ExposeOnSpawn = "true", ClampMin = "0"))
 	float MinDistanceBetweenCenterAndSides = 200;
 
 private:

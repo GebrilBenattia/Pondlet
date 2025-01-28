@@ -11,6 +11,8 @@
 #include "Kismet/GameplayStatics.h"
 #include "Framework/Pondlet_GameState.h"
 #include "Components/InstancedStaticMeshComponent.h"
+#include "Materials/MaterialParameterCollection.h"
+#include "Materials/MaterialParameterCollectionInstance.h"
 
 APCG_Pond::APCG_Pond()
 {
@@ -50,6 +52,8 @@ void APCG_Pond::BeginPlay()
 		GameState->OnPictureTaken.AddDynamic(this, &APCG_Pond::RemovePondDiscs);
 	}
 
+	
+
 	PondSpline->ClearSplinePoints();
 	MakeEllipsisSpline();
 	UpdateSphereRadius();
@@ -64,11 +68,13 @@ void APCG_Pond::CoverPondByDiscs()
 	FTransform ActorTransform = GetActorTransform();
 	for (const FVector Location : DepthPointsLocation) {
 		FTransform SpawnTransform;
-		SpawnTransform.SetLocation(ActorTransform.InverseTransformPosition(Location) + FVector(0, 0, 50));
-		SpawnTransform.SetScale3D(FVector((float)FMath::Max(MinDistanceBetweenCenterAndSides,75) / 50) * 1.1f);
+		SpawnTransform.SetLocation(ActorTransform.InverseTransformPosition(Location) + FVector(0, 0, 1));
+		//SpawnTransform.SetScale3D(FVector((float)FMath::Max(MinDistanceBetweenCenterAndSides, 75) / 50) * 1.1f);
+		SpawnTransform.SetScale3D(FVector(0.75f));
 		UStaticMeshComponent* DiscMeshComponent = (UStaticMeshComponent*)AddComponentByClass(UStaticMeshComponent::StaticClass(), false, SpawnTransform, false);
 		DiscMeshComponent->SetStaticMesh(DiscMesh);
 		DiscMeshComponents.Add(DiscMeshComponent);
+		UE_LOG(LogTemp, Warning, TEXT("PondDISC"));
 	}
 }
 
@@ -245,6 +251,10 @@ void APCG_Pond::DigUsingPCGData(FPCGTaggedData Data)
 	CoverPondByDiscs();
 	AskForPicture();
 	CreateWaterBody();
+	if (LandscapeModifier) {
+		UMaterialParameterCollectionInstance* LandscapeModifierInstance = GetWorld()->GetParameterCollectionInstance(LandscapeModifier);
+		LandscapeModifierInstance->SetVectorParameterValue(FName("PondCenter"), GetActorLocation());
+	}
 }
 
 void APCG_Pond::MakeBordersUsingPCGData(FPCGTaggedData Data)
