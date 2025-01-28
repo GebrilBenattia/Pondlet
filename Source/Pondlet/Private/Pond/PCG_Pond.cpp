@@ -70,7 +70,7 @@ void APCG_Pond::CoverPondByDiscs()
 		FTransform SpawnTransform;
 		SpawnTransform.SetLocation(ActorTransform.InverseTransformPosition(Location) + FVector(0, 0, 1));
 		//SpawnTransform.SetScale3D(FVector((float)FMath::Max(MinDistanceBetweenCenterAndSides, 75) / 50) * 1.1f);
-		SpawnTransform.SetScale3D(FVector(0.75f));
+		SpawnTransform.SetScale3D(DiscSize);
 		UStaticMeshComponent* DiscMeshComponent = (UStaticMeshComponent*)AddComponentByClass(UStaticMeshComponent::StaticClass(), false, SpawnTransform, false);
 		DiscMeshComponent->SetStaticMesh(DiscMesh);
 		DiscMeshComponents.Add(DiscMeshComponent);

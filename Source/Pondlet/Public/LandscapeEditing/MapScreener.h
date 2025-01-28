@@ -17,6 +17,7 @@ public:
 	// Sets default values for this actor's properties
 	AMapScreener();
 
+	UFUNCTION(BlueprintCallable,CallInEditor)
 	void TakeScreenShot();
 
 protected:

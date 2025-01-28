@@ -93,6 +93,8 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	class UStaticMesh* DiscMesh;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FVector DiscSize = FVector(1.0f);
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	class UStaticMesh* PondFloorMesh;
@@ -141,10 +143,10 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "PondSettings", meta = (ExposeOnSpawn = "true", ClampMin = "0"))
 	float MinDistanceBetweenCenterAndSides = 200;
-
+	UPROPERTY(BlueprintReadOnly)
+	float MaxDistance;
 private:
 
-	float MaxDistance;
 
 	UPROPERTY()
 	TArray<FVector> DepthPointsLocation = TArray<FVector>();
