@@ -13,6 +13,9 @@
 #include "Components/InstancedStaticMeshComponent.h"
 #include "Materials/MaterialParameterCollection.h"
 #include "Materials/MaterialParameterCollectionInstance.h"
+#include "Cloner/Layouts/CEClonerMeshLayout.h"
+#include "Cloner/CEClonerActor.h"
+#include "Effector/CEEffectorActor.h"
 
 APCG_Pond::APCG_Pond()
 {
@@ -52,7 +55,7 @@ void APCG_Pond::BeginPlay()
 		GameState->OnPictureTaken.AddDynamic(this, &APCG_Pond::RemovePondDiscs);
 	}
 
-	
+
 
 	PondSpline->ClearSplinePoints();
 	MakeEllipsisSpline();
@@ -60,6 +63,7 @@ void APCG_Pond::BeginPlay()
 	RefreshPCG();
 
 }
+
 
 void APCG_Pond::CoverPondByDiscs()
 {
@@ -69,7 +73,6 @@ void APCG_Pond::CoverPondByDiscs()
 	for (const FVector Location : DepthPointsLocation) {
 		FTransform SpawnTransform;
 		SpawnTransform.SetLocation(ActorTransform.InverseTransformPosition(Location) + FVector(0, 0, 1));
-		//SpawnTransform.SetScale3D(FVector((float)FMath::Max(MinDistanceBetweenCenterAndSides, 75) / 50) * 1.1f);
 		SpawnTransform.SetScale3D(DiscSize);
 		UStaticMeshComponent* DiscMeshComponent = (UStaticMeshComponent*)AddComponentByClass(UStaticMeshComponent::StaticClass(), false, SpawnTransform, false);
 		DiscMeshComponent->SetStaticMesh(DiscMesh);
@@ -225,16 +228,6 @@ void APCG_Pond::DigUsingPCGData(FPCGTaggedData Data)
 		float Depth = PointToDepth(Point, DistanceMetadata);
 		MaxDepth = FMath::Max(Depth, MaxDepth);
 		DepthPointsLocation.Add(Point.Transform.GetLocation());
-
-		//FTransform Transform{
-		//	Point.Transform.GetRotation(),
-		//	 /*Point.Transform.GetLocation() +*/ FVector(0,0,-Depth),
-		//	FVector((float)FMath::Max(MinDistanceBetweenCenterAndSides,75) / 50)
-		//};
-		//if (PondFloorMesh) {
-		//	/*FloorISMComponent->SetStaticMesh(PondFloorMesh);
-		//	FloorISMComponent->AddInstance(Transform, true);*/
-		//}
 	}
 
 	FTransform Transform;
@@ -255,6 +248,7 @@ void APCG_Pond::DigUsingPCGData(FPCGTaggedData Data)
 		UMaterialParameterCollectionInstance* LandscapeModifierInstance = GetWorld()->GetParameterCollectionInstance(LandscapeModifier);
 		LandscapeModifierInstance->SetVectorParameterValue(FName("PondCenter"), GetActorLocation());
 	}
+
 }
 
 void APCG_Pond::MakeBordersUsingPCGData(FPCGTaggedData Data)
@@ -313,3 +307,4 @@ void APCG_Pond::AskForPicture()
 		GameState->TakeMapScreen();
 	}
 }
+

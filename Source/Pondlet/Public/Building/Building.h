@@ -10,8 +10,8 @@ UCLASS()
 class PONDLET_API ABuilding : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	// Sets default values for this actor's properties
 	ABuilding();
 
@@ -31,21 +31,27 @@ protected:
 
 	void PlaySequence();
 
-private :
+private:
 	void TryInitLayout();
 
 	void TryInitEffector();
-protected : 
-	UPROPERTY(EditAnywhere,BlueprintReadOnly)
-	class UStaticMeshComponent * StaticMeshComponent;
+protected:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	class UStaticMeshComponent* StaticMeshComponent;
 
-	UPROPERTY(VisibleAnywhere, meta=(Tooltip="You NEED to add an ActorSequencer in the blueprint"))
+	UPROPERTY(VisibleAnywhere, meta = (Tooltip = "You NEED to add an ActorSequencer in the blueprint"))
 	class UActorSequenceComponent* ActorSequenceComponent;
-	
+
 	UPROPERTY(EditAnywhere)
-	class UCEClonerMeshLayout * MossLayout;
+	class UCEClonerMeshLayout* MossLayout;
 
 	UPROPERTY(EditAnywhere)
 	class ACEEffectorActor* MossEffector;
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class ACEEffectorActor> ClonerEffectorClass;
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class ACEClonerActor> ClonerActorClass;
 
 };

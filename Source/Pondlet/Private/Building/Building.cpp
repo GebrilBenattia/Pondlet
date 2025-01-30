@@ -44,29 +44,26 @@ void ABuilding::PlaySequence()
 
 void ABuilding::TryInitLayout()
 {
-	ACEClonerActor* Cloner = (ACEClonerActor*)UGameplayStatics::GetActorOfClass(GetWorld(), ACEClonerActor::StaticClass());
+	ACEClonerActor* Cloner = (ACEClonerActor*)UGameplayStatics::GetActorOfClass(GetWorld(), ClonerActorClass);
+	
 	if (Cloner) {
 		MossLayout = (UCEClonerMeshLayout*)Cloner->GetActiveLayout();
 		if (MossLayout) {
 			MossLayout->SetCount(0);
 			MossLayout->SetSampleActor(this);
 		}
-
+	}
+	else {
+		UE_LOG(LogTemp, Error, TEXT("ABuilding needs a BP_Cloner"));
+		return;
 	}
 }
 
 void ABuilding::TryInitEffector()
 {
-	TArray<AActor*> OutActors;
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ACEEffectorActor::StaticClass(), OutActors);
-	for (int i = 0; i < OutActors.Num(); i++) {
-		TArray<UActorComponent*> Components = OutActors[i]->GetComponentsByTag(UActorComponent::StaticClass(), FName("MossEffector"));
-		if (Components.Num() > 0) {
-			MossEffector = (ACEEffectorActor*)OutActors[i];
-			return;
-		}
-	}
-	UE_LOG(LogTemp, Error, TEXT("ABuilding needs a CEEffector with a component having the Tag \"Moss Effector\" or needs a BP_Effector"));
+	MossEffector = (ACEEffectorActor*)UGameplayStatics::GetActorOfClass(GetWorld(), ClonerEffectorClass);
+	if(!MossEffector)
+		UE_LOG(LogTemp, Error, TEXT("ABuilding needs a BP_Effector"));
 }
 
 // Called every frame
@@ -74,7 +71,9 @@ void ABuilding::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	if (MossLayout) {
-		MossLayout->SetCount(MossLayout->GetCount() + 1);
+		int Instances = MossLayout->GetCount() + 1;
+		Instances = FMath::Min(1000, Instances);
+		MossLayout->SetCount(Instances);
 	}
 	else {
 		TryInitLayout();
@@ -82,12 +81,12 @@ void ABuilding::Tick(float DeltaTime)
 
 	if (MossEffector) {
 		FVector EffectorLocation = MossEffector->GetActorLocation();
-		EffectorLocation.Z += 10;
+		EffectorLocation.Z += 0.1;
 		UStaticMesh* BuildingMesh = StaticMeshComponent->GetStaticMesh();
 		if (BuildingMesh) {
 			float MaxZ = BuildingMesh->GetBounds().BoxExtent.Z;
-			EffectorLocation.Z = FMath::Min(EffectorLocation.Z, MaxZ) + GetActorLocation().Z;
-			MossEffector->SetActorLocation(EffectorLocation);
+			EffectorLocation.Z = FMath::Min(EffectorLocation.Z, MaxZ);
+			//MossEffector->SetActorLocation(EffectorLocation);
 		}
 	}
 	else

@@ -23,6 +23,7 @@ public:
 
 	void BeginPlay() override;
 
+
 	UFUNCTION(CallInEditor, Category = "DiscMeshes")
 	void CoverPondByDiscs();
 
@@ -68,6 +69,7 @@ private:
 	void CreateWaterBody();
 
 	void AskForPicture();
+
 
 protected:
 
@@ -145,8 +147,8 @@ protected:
 	float MinDistanceBetweenCenterAndSides = 200;
 	UPROPERTY(BlueprintReadOnly)
 	float MaxDistance;
-private:
 
+private:
 
 	UPROPERTY()
 	TArray<FVector> DepthPointsLocation = TArray<FVector>();
