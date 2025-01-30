@@ -21,10 +21,10 @@ bool UDayCycleSettings::IsInsideInterval(const float& Time, const FDayStateSetti
     float endTime = Settings.End24HourFormat;
 
     if (IsMidnightInInterval(startTime, endTime)) {
-        return (Time > startTime || Time < endTime);
+        return (Time >= startTime || Time < endTime);
     }
 
-    return (Time > startTime && Time < endTime);
+    return (Time >= startTime && Time < endTime);
 }
 
 //float UDayCycleSettings::ConvertTo24Hour(float Time, bool IsPM)

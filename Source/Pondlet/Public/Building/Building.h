@@ -18,9 +18,10 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-
+	UFUNCTION(BlueprintCallable)
 	void ResetEffectorPosition();
 
+	UFUNCTION(BlueprintCallable)
 	void ResetMoss();
 
 protected:

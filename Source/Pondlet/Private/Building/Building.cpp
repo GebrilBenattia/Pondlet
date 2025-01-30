@@ -25,8 +25,9 @@ ABuilding::ABuilding()
 void ABuilding::BeginPlay()
 {
 	Super::BeginPlay();
-	TryInitLayout();
-	TryInitEffector();
+	// Unreal builds crash when a Cloner is in the scene :)
+	// TryInitLayout();
+	// TryInitEffector();
 	PlaySequence();
 }
 
@@ -76,7 +77,8 @@ void ABuilding::Tick(float DeltaTime)
 		MossLayout->SetCount(Instances);
 	}
 	else {
-		TryInitLayout();
+		// Unreal builds crash when a Cloner is in the scene :)
+		// TryInitLayout();
 	}
 
 	if (MossEffector) {
@@ -86,12 +88,13 @@ void ABuilding::Tick(float DeltaTime)
 		if (BuildingMesh) {
 			float MaxZ = BuildingMesh->GetBounds().BoxExtent.Z;
 			EffectorLocation.Z = FMath::Min(EffectorLocation.Z, MaxZ);
-			//MossEffector->SetActorLocation(EffectorLocation);
+			MossEffector->SetActorLocation(EffectorLocation);
 		}
 	}
 	else
 	{
-		TryInitEffector();
+		// Unreal builds crash when a Cloner is in the scene :)
+		//TryInitEffector();
 	}
 
 
