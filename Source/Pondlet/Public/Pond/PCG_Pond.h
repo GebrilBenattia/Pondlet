@@ -73,6 +73,9 @@ private:
 
 protected:
 
+	UPROPERTY(BlueprintReadOnly)
+	TArray<FVector> DepthPointsLocation = TArray<FVector>();
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	class UPCGComponent* PCGSplineComponent;
 
@@ -150,8 +153,7 @@ protected:
 
 private:
 
-	UPROPERTY()
-	TArray<FVector> DepthPointsLocation = TArray<FVector>();
+
 
 	UPROPERTY()
 	TArray<class UStaticMeshComponent*> DiscMeshComponents = TArray<class UStaticMeshComponent*>();

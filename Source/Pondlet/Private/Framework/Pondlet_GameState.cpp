@@ -75,7 +75,7 @@ void APondlet_GameState::ResetEcosystem(FEcosystemSpawnParameters SpawnParam)
 	SpawnStructure(SpawnParam.BuildingClass, SpawnParam.Location);
 
 	// Spawn the Pond
-	RandomPondGeneration();
+	//RandomPondGeneration();
 
 	// Spawn the starting foliage
 	if (SpawnParam.PCGActorClass == nullptr) {
@@ -134,15 +134,16 @@ void APondlet_GameState::RandomPondGeneration()
 	float PartWidth = SimulationSize.X / 2;
 	float PartLength = SimulationSize.Y / 2;
 	float PondRadius = Pond->GetPondRadius();
+	FVector Center = FVector(1270, -1280, 100);
 	while (!bCorrectPosition && LandscapePartsIndex.Num() > 0) {
 		int Index = FMath::RandRange(0, LandscapePartsIndex.Num() - 1);
 		FVector2D PartIndex = LandscapePartsIndex[Index];
-		float XLowBorder = PartWidth * PartIndex.X + PondRadius;
+		float XLowBorder = PartWidth * PartIndex.X + PondRadius ;
 		float XHighBorder = PartWidth * (PartIndex.X + 1) - PondRadius;
 		float YLowBorder = PartLength * PartIndex.Y + PondRadius;
 		float YHighBorder = PartLength * (PartIndex.Y + 1) - PondRadius;
-		int X = FMath::RandRange((int)XLowBorder, (int)XHighBorder);
-		int Y = FMath::RandRange((int)YLowBorder, (int)YHighBorder);
+		int X = FMath::RandRange((int)XLowBorder, (int)XHighBorder) + Center.X;
+		int Y = FMath::RandRange((int)YLowBorder, (int)YHighBorder) + Center.Y;
 		FVector Location = FVector(X, Y, 100);
 		Pond->SetActorLocation(Location);
 		TArray<AActor*> OverlappingActors;
